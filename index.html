@@ -163,83 +163,165 @@
         <p>The smallest planet in our solar system and nearest to the Sun, Mercury is only slightly larger than Earth's Moon.</p>
         <p>From the surface of Mercury, the Sun would appear more than three times as large as it does when viewed from Earth, and the sunlight would be as much as seven times brighter. Despite its proximity to the Sun, Mercury is not the hottest planet in our solar system – that title belongs to nearby Venus, thanks to its dense atmosphere.</p>
         <p>Because of Mercury's elliptical – egg-shaped – orbit, and sluggish rotation, the Sun appears to rise briefly, set, and rise again from some parts of the planet's surface. The same thing happens in reverse at sunset.</p>
+        <button type="button"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5N3RId1f3BldlqpaEEQJoZRvvyIU938L4Hw&usqp=CAU" height ="100" width="100" onclick="theMoons()"/></button>
+        <button type="button"> <img src="https://www.kindpng.com/picc/m/8-89773_ruler-svg-png-icon-download-ruler-icon-png.png" height ="100" width="100" onclick="theDiameter()"/></button>
+        <button type="button"> <img src="https://i.fbcd.co/products/original/53545161254278097d585ed84caa7f7426efe45536f9ce96b9779ad1f58024fa.jpg" height ="100" width="100" onclick="myFunction()"/></button>
         <script src="https://d3js.org/d3.v6.min.js"></script>
         <script>
-            var canvasWidth = 600;
-            var canvasHeight = 600;
-            var margin = 200;
+            function theMoons() {
+                var canvasWidth = 600;
+                var canvasHeight = 600;
+                var margin = 200;
 
-            var svg = d3.select("body").append("svg")
-                .attr("width",  canvasWidth)
-                .attr("height", canvasHeight)
+                var svg = d3.select("body").append("svg")
+                    .attr("width", canvasWidth)
+                    .attr("height", canvasHeight)
 
-            var width = svg.attr("width") - margin;
-            var height = svg.attr("height") - margin;
+                var width = svg.attr("width") - margin;
+                var height = svg.attr("height") - margin;
 
-            svg.append("text")
-                .attr("transform", "translate(100, 0")
-                .attr("x", 85)
-                .attr("y", 50)
-                .attr("font-size", "24px")
-                .text("Planets and the Number of Moons")
+                svg.append("text")
+                    .attr("transform", "translate(100, 0")
+                    .attr("x", 85)
+                    .attr("y", 50)
+                    .attr("font-size", "24px")
+                    .text("Planets and the Number of Moons")
 
-            var xScale = d3.scaleBand().range([0, width]).padding(0.4);
-            var yScale = d3.scaleLinear().range([height, 0]);
+                var xScale = d3.scaleBand().range([0, width]).padding(0.4);
+                var yScale = d3.scaleLinear().range([height, 0]);
 
-            var container_g = svg.append("g")
-                .attr("transform",
-                    "translate(" + 100 + ", " + 100 + ")");
+                var container_g = svg.append("g")
+                    .attr("transform",
+                        "translate(" + 100 + ", " + 100 + ")");
 
-            d3.csv("planetsMoons.csv").then(data => {
+                d3.csv("theMoons.csv").then(data => {
 
-                xScale.domain(data.map(function(d){
-                    return d.Planets;
-                }));
-                yScale.domain([0, d3.max(data, function(d) {
-                    return d.Moons;
-                })]);
+                    xScale.domain(data.map(function (d) {
+                        return d.Planets;
+                    }));
+                    yScale.domain([0, d3.max(data, function (d) {
+                        return d.Moons;
+                    })]);
 
-                // Draw bars!
-                container_g.selectAll(".bar")
-                    .data(data)
-                    .enter()
-                    .append("rect")
-                    .attr("class", "bar")
-                    .attr("x", function (d) {
-                        return xScale(d.Planets);
-                    })
-                    .attr("y", function (d) {
-                        return yScale(d.Moons);
-                    })
-                    .attr("width", xScale.bandwidth())
-                    .attr("height", function (d) {
-                        return height - yScale(d.Moons);
-                    })
+                    // Draw bars!
+                    container_g.selectAll(".bar")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function (d) {
+                            return xScale(d.Planets);
+                        })
+                        .attr("y", function (d) {
+                            return yScale(d.Moons);
+                        })
+                        .attr("width", xScale.bandwidth())
+                        .attr("height", function (d) {
+                            return height - yScale(d.Moons);
+                        })
 
-                // Display the X-axis
-                container_g.append("g")
-                    .attr("transform", "translate(0, " + height + ")")
-                    .call(d3.axisBottom(xScale))
-                    .append("text")
-                    .attr("y", height-365)
-                    .attr("x", width-300)
-                    .attr("stroke", "black")
-                    .text("Planet")
+                    // Display the X-axis
+                    container_g.append("g")
+                        .attr("transform", "translate(0, " + height + ")")
+                        .call(d3.axisBottom(xScale))
+                        .append("text")
+                        .attr("y", height - 365)
+                        .attr("x", width - 300)
+                        .attr("stroke", "black")
+                        .text("Planet")
 
-                // Display the Y-axis
-                container_g.append("g")
-                    .call(d3.axisLeft(yScale).tickFormat(function(d) {
-                        return d;
-                    }).ticks(7))
-                    .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", -20)
-                    .attr("x", -145)
-                    .attr("dy", "-1.1em")
-                    .attr("stroke", "black")
-                    .text("Number of Moons")
-            })
+                    // Display the Y-axis
+                    container_g.append("g")
+                        .call(d3.axisLeft(yScale).tickFormat(function (d) {
+                            return d;
+                        }).ticks(7))
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", -20)
+                        .attr("x", -145)
+                        .attr("dy", "-1.1em")
+                        .attr("stroke", "black")
+                        .text("Number of Moons")
+                })
+            }
+            function theDiameter() {
+                var canvasWidth = 700;
+                var canvasHeight = 500;
+                var margin = 200;
 
+                var svg = d3.select("body").append("svg")
+                    .attr("width", canvasWidth)
+                    .attr("height", canvasHeight)
+
+                var width = svg.attr("width") - margin;
+                var height = svg.attr("height") - margin;
+
+                svg.append("text")
+                    .attr("transform", "translate(100, 0")
+                    .attr("x", 85)
+                    .attr("y", 50)
+                    .attr("font-size", "24px")
+                    .text("Planet's Diameter")
+
+                var xScale = d3.scaleBand().range([0, width]).padding(1);
+                var yScale = d3.scaleLinear().range([height, 0]);
+
+                var container_g = svg.append("g")
+                    .attr("transform",
+                        "translate(" + 100 + ", " + 100 + ")");
+
+                d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(data => {
+
+                    xScale.domain(data.map(function (d) {
+                        return d.Planets;
+                    }));
+                    yScale.domain([0, d3.max(data, function (d) {
+                        return +d.Diameter;
+                    })]);
+
+                    // Draw bars!
+                    container_g.selectAll("dot")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        //.attr("class", "bar")
+                        .attr("cx", function (d) {
+                            return xScale(d.Planets);
+                        })
+                        .attr("cy", function (d) {
+                            return yScale(d.Diameter);
+                        })
+                        .attr("r", 10)
+                        .style("fill", "#69b3a2")
+                    //.attr("width", xScale.bandwidth())
+                    //.attr("height", function (d) {
+                    //return height - yScale(d.Moons);
+                    //})
+
+                    // Display the X-axis
+                    container_g.append("g")
+                        .attr("transform", "translate(0, " + height + ")")
+                        .call(d3.axisBottom(xScale))
+                        .append("text")
+                        .attr("y", height - 265)
+                        .attr("x", width - 250)
+                        .attr("stroke", "black")
+                        .text("Planet")
+
+                    // Display the Y-axis
+                    container_g.append("g")
+                        .call(d3.axisLeft(yScale).tickFormat(function (d) {
+                            return d;
+                        }).ticks(10))
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", -40)
+                        .attr("x", -145)
+                        .attr("dy", "-1.1em")
+                        .attr("stroke", "black")
+                        .text("Diameter (km)")
+                })
+            }
         </script>
     </div>
 </div>
