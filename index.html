@@ -129,10 +129,80 @@
         .bar {
             fill: steelblue;
         }
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
 
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #fcbaba;
+            color: white;
+        }
+
+        .modal-body {padding: 2px 16px;}
+
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #fcbaba;
+            color: white;
+        }
     </style>
 </head>
 <body>
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
 
 <ul>
     <li style="float:left"><a class="active" href="index.html">Home</a></li>
@@ -152,6 +222,9 @@
     <p>There are more planets than stars in our galaxy. The current count orbiting our star: eight.</p>
     <p>The inner, rocky planets are Mercury, Venus, Earth, and Mars. NASA's newest rover, Perseverance, landed on Mars on Feb. 18, 2021. The outer planets are gas giants Jupiter and Saturn and ice giants Uranus and Neptune.</p>
     <p>Beyond Neptune, a newer class of smaller worlds called dwarf planets reign, including longtime favorite Pluto. Thousands more planets have been discovered beyond our solar system. Scientists call them exoplanets (exo means "from outside").</p>
+
+    </div>
+
 </div>
 
 <div class="bgimg-2">
@@ -163,165 +236,222 @@
         <p>The smallest planet in our solar system and nearest to the Sun, Mercury is only slightly larger than Earth's Moon.</p>
         <p>From the surface of Mercury, the Sun would appear more than three times as large as it does when viewed from Earth, and the sunlight would be as much as seven times brighter. Despite its proximity to the Sun, Mercury is not the hottest planet in our solar system – that title belongs to nearby Venus, thanks to its dense atmosphere.</p>
         <p>Because of Mercury's elliptical – egg-shaped – orbit, and sluggish rotation, the Sun appears to rise briefly, set, and rise again from some parts of the planet's surface. The same thing happens in reverse at sunset.</p>
-        <button type="button"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5N3RId1f3BldlqpaEEQJoZRvvyIU938L4Hw&usqp=CAU" height ="100" width="100" onclick="theMoons()"/></button>
-        <button type="button"> <img src="https://www.kindpng.com/picc/m/8-89773_ruler-svg-png-icon-download-ruler-icon-png.png" height ="100" width="100" onclick="theDiameter()"/></button>
-        <button type="button"> <img src="https://i.fbcd.co/products/original/53545161254278097d585ed84caa7f7426efe45536f9ce96b9779ad1f58024fa.jpg" height ="100" width="100" onclick="myFunction()"/></button>
-        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <!-- Trigger/Open The Modal -->
+        <button class="modal-button" href="#myModal1">Open Modal</button>
+
+        <!-- The Modal -->
+        <div id="myModal1" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    <h2>Moons</h2>
+                </div>
+                <div class="modal-body">
+                    <svg width="600" height="600" id="svg1"></svg>
+                    <script>
+                        var merMoons = d3.select("#svg1"),
+                            margin = 200,
+                            width = merMoons.attr("width") - margin,
+                            height = merMoons.attr("height") - margin;
+
+                        merMoons.append("text")
+                            .attr("transform", "translate(100, 0)")
+                            .attr("x", 85)
+                            .attr("y", 50)
+                            .attr("font-size", "24px")
+                            .text("Planets and the Number of Moons")
+
+                        var xScale = d3.scaleBand().range([0, width]).padding(0.4);
+                        var yScale = d3.scaleLinear().range([height, 0]);
+
+                        var container_g = merMoons.append("g")
+                            .attr("transform",
+                                "translate(" + 100 + ", " + 100 + ")");
+
+                        d3.csv("theMoons.csv").then(data => {
+
+                            xScale.domain(data.map(function (d) {
+                                return d.Planets;
+                            }));
+                            yScale.domain([0, d3.max(data, function (d) {
+                                return +d.Moons;
+                            })]);
+
+                            // Draw bars!
+                            container_g.selectAll(".bar")
+                                .data(data)
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar")
+                                .attr("x", function (d) {
+                                    return xScale(d.Planets);
+                                })
+                                .attr("y", function (d) {
+                                    return yScale(+d.Moons);
+                                })
+                                .attr("width", xScale.bandwidth())
+                                .attr("height", function (d) {
+                                    return height - yScale(+d.Moons);
+                                })
+
+                            // Display the X-axis
+                            container_g.append("g")
+                                .attr("transform", "translate(0, " + height + ")")
+                                .call(d3.axisBottom(xScale))
+                                .append("text")
+                                .attr("y", height - 265)
+                                .attr("x", width - 200)
+                                .attr("stroke", "black")
+                                .text("Planet")
+
+                            // Display the Y-axis
+                            container_g.append("g")
+                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
+                                    return d;
+                                }).ticks(7))
+                                .append("text")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", -20)
+                                .attr("x", -105)
+                                .attr("dy", "-1.1em")
+                                .attr("stroke", "black")
+                                .text("Number of Moons")
+                        })
+                    </script>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Trigger/Open The Modal -->
+        <button class="modal-button" href="#myModal2">Open Modal</button>
+
+        <!-- The Modal -->
+        <div id="myModal2" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    <h2>Diameter</h2>
+                </div>
+                <div class="modal-body">
+                    <svg width="600" height="600" id="svg2"></svg>
+                    <script>
+                        var merDiam = d3.select("#svg2"),
+                            margin = 200,
+                            widthM = merDiam.attr("width") - margin,
+                            heightM = merDiam.attr("height") - margin;
+                        merDiam.append("text")
+                            .attr("transform", "translate(100, 0")
+                            .attr("x", 85)
+                            .attr("y", 50)
+                            .attr("font-size", "24px")
+                            .text("Planet's Diameter")
+
+                        var xScale = d3.scaleBand().range([0, widthM]).padding(1);
+                        var yScale = d3.scaleLinear().range([heightM, 0]);
+
+                        var container = merDiam.append("g")
+                            .attr("transform",
+                                "translate(" + 100 + ", " + 100 + ")");
+
+                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(data => {
+
+                            xScale.domain(data.map(function (d) {
+                                return d.Planets;
+                            }));
+                            yScale.domain([0, d3.max(data, function (d) {
+                                return +d.Diameter;
+                            })]);
+
+                            // Draw circles!
+                            container.selectAll("dot")
+                                .data(data)
+                                .enter()
+                                .append("circle")
+                                //.attr("class", "bar")
+                                .attr("cx", function (d) {
+                                    return xScale(d.Planets);
+                                })
+                                .attr("cy", function (d) {
+                                    return yScale(d.Diameter);
+                                })
+                                .attr("r", 10)
+                                .style("fill", "#69b3a2")
+                            //.attr("width", xScale.bandwidth())
+                            //.attr("height", function (d) {
+                            //return height - yScale(d.Moons);
+                            //})
+
+                            // Display the X-axis
+                            container.append("g")
+                                .attr("transform", "translate(0, " + height + ")")
+                                .call(d3.axisBottom(xScale))
+                                .append("text")
+                                .attr("y", height - 265)
+                                .attr("x", width - 250)
+                                .attr("stroke", "black")
+                                .text("Planet")
+
+                            // Display the Y-axis
+                            container.append("g")
+                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
+                                    return d;
+                                }).ticks(10))
+                                .append("text")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", -40)
+                                .attr("x", -145)
+                                .attr("dy", "-1.1em")
+                                .attr("stroke", "black")
+                                .text("Diameter (km)")
+                        })
+                    </script>
+                </div>
+            </div>
+
+        </div>
         <script>
-            function theMoons() {
-                var canvasWidth = 600;
-                var canvasHeight = 600;
-                var margin = 200;
+            // Get the button that opens the modal
+            var btn = document.querySelectorAll("button.modal-button");
 
-                var svg = d3.select("body").append("svg")
-                    .attr("width", canvasWidth)
-                    .attr("height", canvasHeight)
+            // All page modals
+            var modals = document.querySelectorAll('.modal');
 
-                var width = svg.attr("width") - margin;
-                var height = svg.attr("height") - margin;
+            // Get the <span> element that closes the modal
+            var spans = document.getElementsByClassName("close");
 
-                svg.append("text")
-                    .attr("transform", "translate(100, 0")
-                    .attr("x", 85)
-                    .attr("y", 50)
-                    .attr("font-size", "24px")
-                    .text("Planets and the Number of Moons")
-
-                var xScale = d3.scaleBand().range([0, width]).padding(0.4);
-                var yScale = d3.scaleLinear().range([height, 0]);
-
-                var container_g = svg.append("g")
-                    .attr("transform",
-                        "translate(" + 100 + ", " + 100 + ")");
-
-                d3.csv("theMoons.csv").then(data => {
-
-                    xScale.domain(data.map(function (d) {
-                        return d.Planets;
-                    }));
-                    yScale.domain([0, d3.max(data, function (d) {
-                        return d.Moons;
-                    })]);
-
-                    // Draw bars!
-                    container_g.selectAll(".bar")
-                        .data(data)
-                        .enter()
-                        .append("rect")
-                        .attr("class", "bar")
-                        .attr("x", function (d) {
-                            return xScale(d.Planets);
-                        })
-                        .attr("y", function (d) {
-                            return yScale(d.Moons);
-                        })
-                        .attr("width", xScale.bandwidth())
-                        .attr("height", function (d) {
-                            return height - yScale(d.Moons);
-                        })
-
-                    // Display the X-axis
-                    container_g.append("g")
-                        .attr("transform", "translate(0, " + height + ")")
-                        .call(d3.axisBottom(xScale))
-                        .append("text")
-                        .attr("y", height - 365)
-                        .attr("x", width - 300)
-                        .attr("stroke", "black")
-                        .text("Planet")
-
-                    // Display the Y-axis
-                    container_g.append("g")
-                        .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                            return d;
-                        }).ticks(7))
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", -20)
-                        .attr("x", -145)
-                        .attr("dy", "-1.1em")
-                        .attr("stroke", "black")
-                        .text("Number of Moons")
-                })
+            // When the user clicks the button, open the modal
+            for (var i = 0; i < btn.length; i++) {
+                btn[i].onclick = function(e) {
+                    e.preventDefault();
+                    modal = document.querySelector(e.target.getAttribute("href"));
+                    modal.style.display = "block";
+                }
             }
-            function theDiameter() {
-                var canvasWidth = 700;
-                var canvasHeight = 500;
-                var margin = 200;
-
-                var svg = d3.select("body").append("svg")
-                    .attr("width", canvasWidth)
-                    .attr("height", canvasHeight)
-
-                var width = svg.attr("width") - margin;
-                var height = svg.attr("height") - margin;
-
-                svg.append("text")
-                    .attr("transform", "translate(100, 0")
-                    .attr("x", 85)
-                    .attr("y", 50)
-                    .attr("font-size", "24px")
-                    .text("Planet's Diameter")
-
-                var xScale = d3.scaleBand().range([0, width]).padding(1);
-                var yScale = d3.scaleLinear().range([height, 0]);
-
-                var container_g = svg.append("g")
-                    .attr("transform",
-                        "translate(" + 100 + ", " + 100 + ")");
-
-                d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(data => {
-
-                    xScale.domain(data.map(function (d) {
-                        return d.Planets;
-                    }));
-                    yScale.domain([0, d3.max(data, function (d) {
-                        return +d.Diameter;
-                    })]);
-
-                    // Draw bars!
-                    container_g.selectAll("dot")
-                        .data(data)
-                        .enter()
-                        .append("circle")
-                        //.attr("class", "bar")
-                        .attr("cx", function (d) {
-                            return xScale(d.Planets);
-                        })
-                        .attr("cy", function (d) {
-                            return yScale(d.Diameter);
-                        })
-                        .attr("r", 10)
-                        .style("fill", "#69b3a2")
-                    //.attr("width", xScale.bandwidth())
-                    //.attr("height", function (d) {
-                    //return height - yScale(d.Moons);
-                    //})
-
-                    // Display the X-axis
-                    container_g.append("g")
-                        .attr("transform", "translate(0, " + height + ")")
-                        .call(d3.axisBottom(xScale))
-                        .append("text")
-                        .attr("y", height - 265)
-                        .attr("x", width - 250)
-                        .attr("stroke", "black")
-                        .text("Planet")
-
-                    // Display the Y-axis
-                    container_g.append("g")
-                        .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                            return d;
-                        }).ticks(10))
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", -40)
-                        .attr("x", -145)
-                        .attr("dy", "-1.1em")
-                        .attr("stroke", "black")
-                        .text("Diameter (km)")
-                })
+            // When the user clicks on <span> (x), close the modal
+            for (var i = 0; i < spans.length; i++) {
+                spans[i].onclick = function() {
+                    for (var index in modals) {
+                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
+                    }
+                }
             }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target.classList.contains('modal')) {
+                    for (var index in modals) {
+                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
+                    }
+                }
+            }
+        </script>
+        <button type="button"> <img src="https://i.fbcd.co/products/original/53545161254278097d585ed84caa7f7426efe45536f9ce96b9779ad1f58024fa.jpg" height ="100" width="100"/></button>
+        <script>
+
         </script>
     </div>
 </div>
