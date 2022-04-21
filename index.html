@@ -270,7 +270,7 @@
                             .attr("transform",
                                 "translate(" + 100 + ", " + 100 + ")");
 
-                        d3.csv("theMoons.csv").then(data => {
+                        d3.csv("planetsMoons.csv").then(data => {
 
                             xScale.domain(data.map(function (d) {
                                 return d.Planets;
