@@ -252,6 +252,9 @@
 </div>
 
 <div class="bgimg-2">
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000000;">58,000,000 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -298,7 +301,7 @@
                             .attr("class", "tooltip")
                             .style("opacity", 0);
 
-                        d3.csv("moons.csv").then(data => {
+                        d3.csv("planetsMoons.csv").then(data => {
 
                             xScale.domain(data.map(function (d) {
                                 return d.Planets;
@@ -630,7 +633,9 @@
 </div>
 
 <div class="bgimg-3">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">108,000,000 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -647,7 +652,9 @@
 </div>
 
 <div class="bgimg-4">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000000;">150,000,000 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -660,7 +667,9 @@
 </div>
 
 <div class="bgimg-5">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">228,000,000 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -678,7 +687,9 @@
 </div>
 
 <div class="bgimg-6">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">778,000,000 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -692,7 +703,9 @@
 </div>
 
 <div class="bgimg-7">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">1,433,449,370 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -705,7 +718,9 @@
 </div>
 
 <div class="bgimg-8">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">2,870,972,200 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -717,7 +732,9 @@
 </div>
 
 <div class="bgimg-9">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">4,498,252,900 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -730,7 +747,9 @@
 </div>
 
 <div class="bgimg-10">
-
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #000;">6,906,376,272 km</span>
+    </div>
 </div>
 
 <div style="position:relative;">
@@ -775,7 +794,7 @@
                             .attr("transform",
                                 "translate(" + 100 + ", " + 100 + ")");
 
-                        d3.csv("moons.csv").then(data => {
+                        d3.csv("planetsMoons.csv").then(data => {
 
                             xScale.domain(data.map(function (d) {
                                 return d.Planets;
