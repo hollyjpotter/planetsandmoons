@@ -160,7 +160,8 @@
             -webkit-animation-name: animatetop;
             -webkit-animation-duration: 0.4s;
             animation-name: animatetop;
-            animation-duration: 0.4s
+            animation-duration: 0.4s;
+            color: #000;
         }
 
         /* Add Animation */
@@ -3647,7 +3648,7 @@
                     .attr("cx", function(d) { return x(d.value1); })
                     .attr("cy", function(d) { return y(d.group); })
                     .attr("r", "6")
-                    .style("fill", "#69b3a2")
+                    .style("fill", "black")
 
                 // Circles of variable 2
                 svgT.selectAll("mycircle")
@@ -3657,7 +3658,7 @@
                     .attr("cx", function(d) { return x(d.value2); })
                     .attr("cy", function(d) { return y(d.group); })
                     .attr("r", "6")
-                    .style("fill", "#4C4082")
+                    .style("fill", "steelblue")
             })
         </script>
     </div>
