@@ -600,7 +600,7 @@
                 .text("Planets' Gravity")
 
             //Reading the data
-            d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
+            d3.csv("planetsGravity.csv").then( function(data) {
 
                 //Size scale for each circle
                 const size = d3.scaleLinear()
@@ -799,7 +799,7 @@
                     .attr("transform",
                         "translate(" + 100 + ", " + 100 + ")");
                 //load the data (all data is on github not just through gists)
-                d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
+                d3.csv("planetsDiameter.csv").then(dataM => {
                     //set the domains for x and y
                     xScaleM.domain(dataM.map(function (d) {
                         return d.Planets;
@@ -881,7 +881,7 @@
                     .text("Planets' Temperatures")
 
                 //Parse the Data
-                d3.csv("https://gist.githubusercontent.com/hollyjpotter/a9659ae41a18a1530d5d5f113fe92cef/raw/c08e7a77cfe313564c4cb591cb008cd02d4ad270/planetTemps.csv", function(data) {
+                d3.csv("planetTemperature.csv", function(data) {
 
                     //Add X axis
                     var x = d3.scaleLinear()
