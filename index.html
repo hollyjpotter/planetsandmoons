@@ -7,12 +7,13 @@
     <link href="https://fonts.googleapis.com/css?family=Quicksand:500" rel="stylesheet">
     <script scr="https//code.jquery.com/jquery-3.2.1.js">
     </script>
+    <!-- css for page -->
     <style>
         body, html {
             height: 100%;
             margin: 0;
             font: 400 15px/1.8 "Lato", sans-serif;
-            color: #777;
+            color: #000;
         }
 
         .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6, .bgimg-7, .bgimg-8, .bgimg-9, .bgimg-10, .bgimg-11 {
@@ -222,17 +223,51 @@
             height: 35px;
             padding: 2px;
             font: 12px sans-serif;
-            background: lightsteelblue;
             border: 0px;
             border-radius: 8px;
             pointer-events: none;
+            color: #111111;
         }
     </style>
 </head>
 <body>
 
 <script src="https://d3js.org/d3.v6.min.js"></script>
+<!-- Method to create all the different colors for each planet, colors from ColorBrewer -->
+<script>
+    function theColors(planet) {
+        if(planet === "Mercury") {
+            return "#f2f2f2";
+        }
+        if(planet === "Venus") {
+            return "#fddaec";
+        }
+        if(planet === "Earth") {
+            return "#ccebc5";
+        }
+        if(planet === "Mars") {
+            return "#fbb4ae";
+        }
+        if(planet === "Jupiter") {
+            return "#fed9a6";
+        }
+        if(planet === "Saturn") {
+            return "#e5d8bd";
+        }
+        if(planet === "Uranus") {
+            return "#b3cde3";
+        }
+        if(planet === "Neptune") {
+            return "#decbe4";
+        }
+        if(planet === "Pluto") {
+            return "#ffffcc";
+        }
+    }
 
+</script>
+
+<!-- The menu bar at the top of the page -->
 <ul>
     <li style="float:left"><a class="active" href="index.html">Home</a></li>
     <li style="float:left"><a href="alpha.html">Alpha Release</a></li>
@@ -240,409 +275,55 @@
 
 </ul>
 
+<!-- The cars to hold the first picture -->
 <div class="bgimg-1">
     <div class="caption">
         <span class="border">Planets and Their Moons</span>
     </div>
 </div>
 
+<!-- the first text part -->
 <div style="color: #777;background-color:white;text-align:center;padding:50px 80px;text-align: justify;">
     <h3 style="text-align:center;">The Solar System</h3>
     <p>There are more planets than stars in our galaxy. The current count orbiting our star: eight.</p>
     <p>The inner, rocky planets are Mercury, Venus, Earth, and Mars. NASA's newest rover, Perseverance, landed on Mars on Feb. 18, 2021. The outer planets are gas giants Jupiter and Saturn and ice giants Uranus and Neptune.</p>
     <p>Beyond Neptune, a newer class of smaller worlds called dwarf planets reign, including longtime favorite Pluto. Thousands more planets have been discovered beyond our solar system. Scientists call them exoplanets (exo means "from outside").</p>
 
-</div>
-
-</div>
-
+    <!-- picture -->
 <div class="bgimg-2">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000000;">58,000,000 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Mercury</h3>
         <p>The smallest planet in our solar system and nearest to the Sun, Mercury is only slightly larger than Earth's Moon.</p>
         <p>From the surface of Mercury, the Sun would appear more than three times as large as it does when viewed from Earth, and the sunlight would be as much as seven times brighter. Despite its proximity to the Sun, Mercury is not the hottest planet in our solar system – that title belongs to nearby Venus, thanks to its dense atmosphere.</p>
         <p>Because of Mercury's elliptical – egg-shaped – orbit, and sluggish rotation, the Sun appears to rise briefly, set, and rise again from some parts of the planet's surface. The same thing happens in reverse at sunset.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#myModal1">Moons</button>
-
-        <!-- The Modal -->
-        <div id="myModal1" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="svg1"></svg>
-                    <script>
-                        var merMoons = d3.select("#svg1"),
-                            margin = 200,
-                            width = merMoons.attr("width") - margin,
-                            height = merMoons.attr("height") - margin;
-
-                        merMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_g = merMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        var div = d3.select("body").append("div")
-                            .attr("class", "tooltip")
-                            .style("opacity", 0);
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_g.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Mercury") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_g.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_g.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#myModal2">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="myModal2" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="svg2"></svg>
-                    <script>
-                        var merDiam = d3.select("#svg2"),
-                            margin = 200,
-                            widthM = merDiam.attr("width") - margin,
-                            heightM = merDiam.attr("height") - margin;
-                        merDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container = merDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#my_dataviz")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px");
-
-                            // Draw circles!
-                            container.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Mercury") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-
-        </div>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#myModal3" style="">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="myModal3" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <!-- Create a div where the graph will take place -->
-                    <div id="my_dataviz"></div>
-                    <svg width="500" height="500" id="my_dataviz"></svg>
-                    <script>
-
-                        // set the dimensions and margins of the graph
-                        const widthG = 460
-                        const heightG = 460
-
-                        // append the svg object to the body of the page
-                        const svg = d3.select("#my_dataviz")
-                            .append("svg")
-                            .attr("width", widthG)
-                            .attr("height", heightG)
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#my_dataviz")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svg.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Mercury") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-
-        </div>
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
+        <!-- Buttons to link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-3">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">108,000,000 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Venus</h3>
@@ -653,732 +334,60 @@
         <p>Venus was the first planet to be explored by a spacecraft – NASA’s Mariner 2 successfully flew by and scanned the cloud-covered world on Dec. 14, 1962. Since then, numerous spacecraft from the U.S. and other space agencies have explored Venus, including NASA’s Magellan, which mapped the planet's surface with radar. Soviet spacecraft made the most successful landings on the surface of Venus to date, but they didn’t survive long due to the extreme heat and crushing pressure. An American probe, one of NASA's Pioneer Venus Multiprobes, survived for about an hour after impacting the surface in 1978.</p>
         <p>More recent Venus missions include ESA’s Venus Express (which orbited from 2006 until 2016) and Japan’s Akatsuki Venus Climate Orbiter (orbiting since 2016).</p>
         <p>NASA’s Parker Solar Probe has made multiple flybys of Venus. On Feb. 9, 2022, NASA announced the spacecraft had captured its first visible light images of the surface of Venus from space during its February 2021 flyby.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#venusMoonBarModal">Moons</button>
+        <!-- Buttons to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="venusMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="venusBar"></svg>
-                    <script>
-                        var venMoons = d3.select("#venusBar"),
-                            margin = 200,
-                            width = venMoons.attr("width") - margin,
-                            height = venMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        venMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_v = venMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_v.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Venus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_v.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_v.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#venusDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="venusDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="venusCirc"></svg>
-                    <script>
-                        var venDiam = d3.select("#venusCirc"),
-                            margin = 200,
-                            widthM = venDiam.attr("width") - margin,
-                            heightM = venDiam.attr("height") - margin;
-                        venDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_vd = venDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_vd.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Venus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_vd.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_vd.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#venusGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="venusGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="venusGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgV = d3.select("#venusGravity")
-                        margin = 200
-                        widthV = svgV.attr("width") - margin,
-                            height = svgV.attr("height") - margin;
-                        svgV.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const TooltipV = d3.select("#venusGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseoverV = function(event, d) {
-                                TooltipV
-                                    .style("opacity", 10)
-                            }
-                            const mousemoveV = function(event, d) {
-                                TooltipV
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleaveV = function(event, d) {
-                                TooltipV
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgV.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Venus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseoverV) // What to do when hovered
-                                .on("mousemove", mousemoveV)
-                                .on("mouseleave", mouseleaveV)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-4">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000000;">150,000,000 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Earth</h3>
         <p>Our home planet is the third planet from the Sun, and the only place we know of so far that’s inhabited by living things.</p>
         <p>While Earth is only the fifth largest planet in the solar system, it is the only world in our solar system with liquid water on the surface. Just slightly larger than nearby Venus, Earth is the biggest of the four planets closest to the Sun, all of which are made of rock and metal.</p>
         <p>The name Earth is at least 1,000 years old. All of the planets, except for Earth, were named after Greek and Roman gods and goddesses. However, the name Earth is a Germanic word, which simply means “the ground.”</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#earthMoonBarModal">Moons</button>
+        <!-- Link to charts -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="earthMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="earthBar"></svg>
-                    <script>
-                        var eMoons = d3.select("#earthBar"),
-                            margin = 200,
-                            width = eMoons.attr("width") - margin,
-                            height = eMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        eMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_e = eMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_e.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Earth") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_e.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_e.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#eDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="eDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="eCirc"></svg>
-                    <script>
-                        var eDiam = d3.select("#eCirc"),
-                            margin = 200,
-                            widthM = eDiam.attr("width") - margin,
-                            heightM = eDiam.attr("height") - margin;
-                        eDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_ed = eDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_ed.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Earth") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_ed.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_ed.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#eGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="eGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="eGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgE = d3.select("#eGravity")
-                        margin = 200
-                        widthE = svgE.attr("width") - margin,
-                            heightE = svgE.attr("height") - margin;
-                        svgE.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgE.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Earth") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-5">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">228,000,000 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Mars</h3>
@@ -1390,366 +399,30 @@
         <p>In May 2021, China became the second nation to ever land successfully on Mars when its Zhurong Mars rover touched down.</p>
         <p>An international fleet of eight orbiters is studying the Red Planet from above including three NASA orbiters: 2001 Mars Odyssey, Mars Reconnaissance Orbiter, and MAVEN.</p>
         <p>These robotic explorers have found lots of evidence that Mars was much wetter and warmer, with a thicker atmosphere, billions of years ago.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#mMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="mMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="mBar"></svg>
-                    <script>
-                        var mMoons = d3.select("#mBar"),
-                            margin = 200,
-                            width = mMoons.attr("width") - margin,
-                            height = mMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        mMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_m = mMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_m.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Mars") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_m.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_m.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#mDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="mDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="mCirc"></svg>
-                    <script>
-                        var mDiam = d3.select("#mCirc"),
-                            margin = 200,
-                            widthM = mDiam.attr("width") - margin,
-                            heightM = mDiam.attr("height") - margin;
-                        mDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_md = mDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_md.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Mars") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_md.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_md.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#mGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="mGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="mGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgM = d3.select("#mGravity")
-                        margin = 200
-                        widthM = svgM.attr("width") - margin,
-                            heightM = svgM.attr("height") - margin;
-                        svgM.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgM.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Mars") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-6">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">778,000,000 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Jupiter</h3>
@@ -1757,1463 +430,119 @@
         <p>Fifth in line from the Sun, Jupiter is, by far, the largest planet in the solar system – more than twice as massive as all the other planets combined.</p>
         <p>Jupiter's familiar stripes and swirls are actually cold, windy clouds of ammonia and water, floating in an atmosphere of hydrogen and helium. Jupiter’s iconic Great Red Spot is a giant storm bigger than Earth that has raged for hundreds of years.</p>
         <p>One spacecraft – NASA's Juno orbiter – is currently exploring this giant world.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#jMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="jMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="jBar"></svg>
-                    <script>
-                        var jMoons = d3.select("#jBar"),
-                            margin = 200,
-                            width = jMoons.attr("width") - margin,
-                            height = jMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        jMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_j = jMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_j.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Jupiter") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_j.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_j.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#jDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="jDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="jCirc"></svg>
-                    <script>
-                        var jDiam = d3.select("#jCirc"),
-                            margin = 200,
-                            widthM = jDiam.attr("width") - margin,
-                            heightM = jDiam.attr("height") - margin;
-                        jDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_jd = jDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_jd.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Jupiter") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_jd.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_jd.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#jGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="jGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="jGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgJ = d3.select("#jGravity")
-                        margin = 200
-                        widthJ = svgJ.attr("width") - margin,
-                            heightJ = svgJ.attr("height") - margin;
-                        svgJ.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgJ.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Jupiter") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-7">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">1,433,449,370 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Saturn</h3>
         <p>Saturn is the sixth planet from the Sun and the second-largest planet in our solar system.</p>
         <p>Adorned with thousands of beautiful ringlets, Saturn is unique among the planets. It is not the only planet to have rings – made of chunks of ice and rock – but none are as spectacular or as complicated as Saturn's.</p>
         <p>Like fellow gas giant Jupiter, Saturn is a massive ball made mostly of hydrogen and helium.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#sMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="sMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="sBar"></svg>
-                    <script>
-                        var sMoons = d3.select("#sBar"),
-                            margin = 200,
-                            width = sMoons.attr("width") - margin,
-                            height = sMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        sMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_s = sMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_s.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Saturn") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_s.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_s.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#sDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="sDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="sCirc"></svg>
-                    <script>
-                        var sDiam = d3.select("#sCirc"),
-                            margin = 200,
-                            widthM = sDiam.attr("width") - margin,
-                            heightM = sDiam.attr("height") - margin;
-                        sDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_sd = sDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_sd.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Saturn") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_sd.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_sd.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#sGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="sGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="sGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgS = d3.select("#sGravity")
-                        margin = 200
-                        widthS = svgS.attr("width") - margin,
-                            heightS = svgS.attr("height") - margin;
-                        svgS.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgS.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Saturn") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-8">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">2,870,972,200 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Uranus</h3>
         <p>Uranus is the seventh planet from the Sun, and has the third-largest diameter in our solar system. It was the first planet found with the aid of a telescope, Uranus was discovered in 1781 by astronomer William Herschel, although he originally thought it was either a comet or a star.</p>
         <p>It was two years later that the object was universally accepted as a new planet, in part because of observations by astronomer Johann Elert Bode. Herschel tried unsuccessfully to name his discovery Georgium Sidus after King George III. Instead, the scientific community accepted Bode's suggestion to name it Uranus, the Greek god of the sky, as suggested by Bode.​</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#uMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="uMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="uBar"></svg>
-                    <script>
-                        var uMoons = d3.select("#uBar"),
-                            margin = 200,
-                            width = uMoons.attr("width") - margin,
-                            height = uMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        uMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_u = uMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_u.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Uranus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_u.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_u.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#uDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="uDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="uCirc"></svg>
-                    <script>
-                        var uDiam = d3.select("#uCirc"),
-                            margin = 200,
-                            widthM = uDiam.attr("width") - margin,
-                            heightM = uDiam.attr("height") - margin;
-                        uDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_ud = uDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_ud.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Uranus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_ud.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_ud.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#uGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="uGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="uGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgU = d3.select("#uGravity")
-                        margin = 200
-                        widthU = svgU.attr("width") - margin,
-                            heightU = svgU.attr("height") - margin;
-                        svgU.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgU.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Uranus") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-9">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">4,498,252,900 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Neptune</h3>
         <p>Dark, cold, and whipped by supersonic winds, ice giant Neptune is the eighth and most distant planet in our solar system.</p>
         <p>More than 30 times as far from the Sun as Earth, Neptune is the only planet in our solar system not visible to the naked eye and the first predicted by mathematics before its discovery. In 2011 Neptune completed its first 165-year orbit since its discovery in 1846.</p>
         <p>NASA's Voyager 2 is the only spacecraft to have visited Neptune up close. It flew past in 1989 on its way out of the solar system.</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#NeptuneMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="NeptuneMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="nepBar"></svg>
-                    <script>
-                        var nepMoons = d3.select("#nepBar"),
-                            margin = 200,
-                            width = nepMoons.attr("width") - margin,
-                            height = nepMoons.attr("height") - margin;
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
-                        nepMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_n = nepMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_n.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Neptune") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_n.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_n.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#nepDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="nepDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="nepCirc"></svg>
-                    <script>
-                        var nepDiam = d3.select("#nepCirc"),
-                            margin = 200,
-                            widthM = nepDiam.attr("width") - margin,
-                            heightM = nepDiam.attr("height") - margin;
-                        nepDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_nd = nepDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_nd.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Neptune") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_nd.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_nd.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#nepGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="nepGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="nepGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgN = d3.select("#nepGravity")
-                        margin = 200
-                        widthN = svgN.attr("width") - margin,
-                            heightN = svgN.attr("height") - margin;
-                        svgN.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgN.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Neptune") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
     </div>
 </div>
 
+    <!-- picture -->
 <div class="bgimg-10">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;">6,906,376,272 km</span>
     </div>
 </div>
 
+    <!-- card with writing -->
 <div style="position:relative;">
     <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
         <h3 style="text-align:center;">Pluto</h3>
@@ -3222,445 +551,399 @@
         <p>On July 14, 2015, NASA’s New Horizons spacecraft made its historic flight through the Pluto system – providing the first close-up images of Pluto and its moons and collecting other data that has transformed our understanding of these mysterious worlds on the solar system’s outer frontier.</p>
         <p>In the years since that groundbreaking flyby, nearly every conjecture about Pluto possibly being an inert ball of ice has been thrown out the window or flipped on its head.</p>
         <p>“It’s clear to me that the solar system saved the best for last!” said Alan Stern, New Horizons principal investigator from the Southwest Research Institute, Boulder, Colorado. “We could not have explored a more fascinating or scientifically important planet at the edge of our solar system. The New Horizons team worked for 15 years to plan and execute this flyby and Pluto paid us back in spades!”</p>
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#plutoMoonBarModal">Moons</button>
+        <!-- Link to each chart -->
+        <a href="#moons">
+            <button>Go to Moon Chart</button>
+        </a>
 
-        <!-- The Modal -->
-        <div id="plutoMoonBarModal" class="modal">
+        <a href="#diameter">
+            <button>Go to Diameter Chart</button>
+        </a>
 
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Moons</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="plutoBar"></svg>
-                    <script>
-                        var plutMoons = d3.select("#plutoBar"),
-                            margin = 200,
-                            width = plutMoons.attr("width") - margin,
-                            height = plutMoons.attr("height") - margin;
-
-                        plutMoons.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planets and the Number of Moons")
-
-                        var xScale = d3.scaleBand().range([0, width]).padding(1);
-                        var yScale = d3.scaleLinear().range([height, 0]);
-
-                        var container_p = plutMoons.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("planetsMoons.csv").then(data => {
-
-                            xScale.domain(data.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScale.domain([0, d3.max(data, function (d) {
-                                return +d.Moons;
-                            })]);
-
-                            // Draw bars!
-                            container_p.selectAll(".bar")
-                                .data(data)
-                                .enter()
-                                .append("rect")
-                                //.attr("class", "bar")
-                                .attr("fill", function (d) {
-                                    if(d.Planets === "Pluto") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .attr("x", function (d) {
-                                    return xScale(d.Planets);
-                                })
-                                .attr("y", function (d) {
-                                    return yScale(+d.Moons);
-                                })
-                                .attr("width", 30)
-                                .attr("height", function (d) {
-                                    return height - yScale(+d.Moons);
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons);
-
-                            // Display the X-axis
-                            container_p.append("g")
-                                .attr("transform", "translate(0, " + height + ")")
-                                .call(d3.axisBottom(xScale))
-                                .append("text")
-                                .attr("y", height - 365)
-                                .attr("x", width - 200)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_p.append("g")
-                                .call(d3.axisLeft(yScale).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(7))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -30)
-                                .attr("x", -155)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Number of Moons")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#plutoDiameter">Diameter</button>
-
-        <!-- The Modal -->
-        <div id="plutoDiameter" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Diameter</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="600" height="600" id="plutoCirc"></svg>
-                    <script>
-                        var pluDiam = d3.select("#plutoCirc"),
-                            margin = 200,
-                            widthM = pluDiam.attr("width") - margin,
-                            heightM = pluDiam.attr("height") - margin;
-                        pluDiam.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
-                        var yScaleM = d3.scaleLinear().range([heightM, 0]);
-
-                        var container_pd = pluDiam.append("g")
-                            .attr("transform",
-                                "translate(" + 100 + ", " + 100 + ")");
-
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
-
-                            xScaleM.domain(dataM.map(function (d) {
-                                return d.Planets;
-                            }));
-                            yScaleM.domain([0, d3.max(dataM, function (d) {
-                                return +d.Diameter;
-                            })]);
-
-                            // Draw circles!
-                            container_pd.selectAll("dot")
-                                .data(dataM)
-                                .enter()
-                                .append("circle")
-                                .attr("cx", function (d) {
-                                    return xScaleM(d.Planets);
-                                })
-                                .attr("cy", function (d) {
-                                    return yScaleM(+d.Diameter);
-                                })
-                                .attr("r", 10)
-                                .style("fill", function (d) {
-                                    if(d.Planets === "Pluto") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .append('title')
-                                .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km");
-
-                            // Display the X-axis
-                            container_pd.append("g")
-                                .attr("transform", "translate(0, " + heightM + ")")
-                                .call(d3.axisBottom(xScaleM))
-                                .append("text")
-                                .attr("y", heightM - 365)
-                                .attr("x", widthM - 250)
-                                .attr("stroke", "black")
-                                .text("Planet")
-
-                            // Display the Y-axis
-                            container_pd.append("g")
-                                .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
-                                    return d;
-                                }).ticks(10))
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", -40)
-                                .attr("x", -145)
-                                .attr("dy", "-1.1em")
-                                .attr("stroke", "black")
-                                .text("Diameter (km)")
-                        })
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trigger/Open The Modal -->
-        <button class="button" href="#plutoGrav">Gravity</button>
-
-        <!-- The Modal -->
-        <div id="plutoGrav" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    <h2>Gravity</h2>
-                </div>
-                <div class="modal-body">
-                    <svg width="500" height="500" id="pluGravity"></svg>
-                    <script>
-                        // set the dimensions and margins of the graph
-
-                        // append the svg object to the body of the page
-                        var svgP = d3.select("#pluGravity")
-                        margin = 200
-                        widthP = svgP.attr("width") - margin,
-                            heightP = svgP.attr("height") - margin;
-                        svgP.append("text")
-                            .attr("transform", "translate(100, 0)")
-                            .attr("x", 85)
-                            .attr("y", 50)
-                            .attr("font-size", "24px")
-                            .text("Planet's Diameter")
-
-                        // Read data
-                        d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
-
-                            // Size scale for countries
-                            const size = d3.scaleLinear()
-                                .domain([0, 30])
-                                .range([7,55])  // circle will be between 7 and 55 px wide
-
-                            // create a tooltip
-                            const Tooltip = d3.select("#pluGravity")
-                                .append("div")
-                                .style("opacity", 0)
-                                .attr("class", "tooltip")
-                                .style("background-color", "white")
-                                .style("text-color", "black")
-                                .style("border", "solid")
-                                .style("border-width", "2px")
-                                .style("border-radius", "5px")
-                                .style("padding", "5px")
-
-                            // Three function that change the tooltip when user hover / move / leave a cell
-                            const mouseover = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 10)
-                            }
-                            const mousemove = function(event, d) {
-                                Tooltip
-                                    .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
-                                    .style("left", (event.x/2+20) + "px")
-                                    .style("top", (event.y/2-30) + "px")
-                            }
-                            var mouseleave = function(event, d) {
-                                Tooltip
-                                    .style("opacity", 1)
-                            }
-
-                            // Initialize the circle: all located at the center of the svg area
-                            var node = svgP.append("g")
-                                .selectAll("circle")
-                                .data(data)
-                                .join("circle")
-                                .attr("class", "node")
-                                .attr("r", d => size(d.Gravity))
-                                .attr("cx", width / 2)
-                                .attr("cy", height / 2)
-                                .style("fill", function (d) {
-                                    if(d.Planet === "Pluto") {
-                                        return "red";
-                                    }
-                                    return "grey";
-                                })
-                                .style("fill-opacity", 0.8)
-                                .attr("stroke", "black")
-                                .style("stroke-width", 1)
-                                .on("mouseover", mouseover) // What to do when hovered
-                                .on("mousemove", mousemove)
-                                .on("mouseleave", mouseleave)
-                                .call(d3.drag() // call specific function when circle is dragged
-                                    .on("start", dragstarted)
-                                    .on("drag", dragged)
-                                    .on("end", dragended));
-
-                            // Features of the forces applied to the nodes:
-                            const simulation = d3.forceSimulation()
-                                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
-                                .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
-                                .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
-
-                            // Apply these forces to the nodes and update their positions.
-                            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
-                            simulation
-                                .nodes(data)
-                                .on("tick", function(d){
-                                    node
-                                        .attr("cx", d => d.x)
-                                        .attr("cy", d => d.y)
-                                });
-
-                            // What happens when a circle is dragged?
-                            function dragstarted(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03).restart();
-                                d.fx = d.x;
-                                d.fy = d.y;
-                            }
-                            function dragged(event, d) {
-                                d.fx = event.x;
-                                d.fy = event.y;
-                            }
-                            function dragended(event, d) {
-                                if (!event.active) simulation.alphaTarget(.03);
-                                d.fx = null;
-                                d.fy = null;
-                            }
-                        })
-
-                    </script>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Get the button that opens the modal
-            var btn = document.querySelectorAll("button.button");
-
-            // All page modals
-            var modals = document.querySelectorAll('.modal');
-
-            // Get the <span> element that closes the modal
-            var spans = document.getElementsByClassName("close");
-
-            // When the user clicks the button, open the modal
-            for (var i = 0; i < btn.length; i++) {
-                btn[i].onclick = function(e) {
-                    e.preventDefault();
-                    modal = document.querySelector(e.target.getAttribute("href"));
-                    modal.style.display = "block";
-                }
-            }
-            // When the user clicks on <span> (x), close the modal
-            for (var i = 0; i < spans.length; i++) {
-                spans[i].onclick = function() {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target.classList.contains('modal')) {
-                    for (var index in modals) {
-                        if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
-                    }
-                }
-            }
-        </script>
+        <a href="#end">
+            <button>Go to Gravity Chart</button>
+        </a>
 
     </div>
 </div>
+
+    <!-- picture -->
 <div class="bgimg-11">
     <div class="caption">
         <span class="border" style="background-color:transparent;font-size:25px;color: #000;"></span>
     </div>
 </div>
 
+    <!-- the charts -->
 <div style="position:relative;">
-    <div style="color:#ddd;background-color:#ddd;text-align:center;padding:50px 80px;text-align: justify;">
-        <h3 style="text-align:center;">Extras</h3>
-        <svg width="1100" height="600" id="planetsTemp"></svg>
-        <script src="https://d3js.org/d3.v4.js"></script>
+    <div id="end" style="color:#ddd;background-color:#ddd;text-align:center;padding:50px 80px;text-align: justify;">
+        <h3 style="text-align:center;">Visualizations</h3>
+        <!-- first chart -->
+        <div id="my_dataviz"></div>
         <script>
-            // set the dimensions and margins of the graph
-            var marginT = {top: 40, right: 30, bottom: 30, left: 50},
-                widthT = 460 - marginT.left - marginT.right,
-                heightT = 500 - marginT.top - marginT.bottom;
 
-            // append the svg object to the body of the page
-            var svgT = d3.select("#planetsTemp")
+            //set the dimensions and margins of the graph
+            const widthG = 560
+            const heightG = 460
+
+            //append the svg object to the body of the page
+            const svg = d3.select("#my_dataviz")
                 .append("svg")
-                .attr("width", widthT + marginT.left + marginT.right)
-                .attr("height", heightT + marginT.top + marginT.bottom)
-                .append("g")
-                .attr("transform",
-                    "translate(" + marginT.left + "," + marginT.top + ")");
-
-            svgT.append("text")
-                .attr("transform", "translate(100, 0")
-                .attr("x", 75)
-                .attr("y", 10)
+                .attr("width", widthG)
+                .attr("height", heightG)
+            //adding the title to the chart
+            svg.append("text")
+                .attr("transform", "translate(100, 0)")
+                .attr("x", 30)
+                .attr("y", 250)
                 .attr("font-size", "24px")
-                .text("Planets Temperatures")
+                .text("Planets' Gravity")
 
-            // Parse the Data
-            d3.csv("https://gist.githubusercontent.com/hollyjpotter/a9659ae41a18a1530d5d5f113fe92cef/raw/c08e7a77cfe313564c4cb591cb008cd02d4ad270/planetTemps.csv", function(data) {
+            //Reading the data
+            d3.csv("https://gist.githubusercontent.com/hollyjpotter/0c13d2742215361bf34a156a41212a81/raw/b5f0e11323ce88818e65f2c3e7de332c7ee935b7/planetsGravity.csv").then( function(data) {
 
-                // Add X axis
-                var x = d3.scaleLinear()
-                    .domain([-450, 900])
-                    .range([ 0, widthT]);
-                svgT.append("g")
-                    .attr("transform", "translate(0," + heightT + ")")
-                    .call(d3.axisBottom(x))
+                //Size scale for each circle
+                const size = d3.scaleLinear()
+                    .domain([0, 30])
+                    .range([7,55])  // circle will be between 7 and 55 px wide
 
-                // Y axis
-                var y = d3.scaleBand()
-                    .range([ 0, heightT ])
-                    .domain(data.map(function(d) { return d.group; }))
-                    .padding(1);
-                svgT.append("g")
-                    .call(d3.axisLeft(y))
+                //create the tooltips
+                const Tooltip = d3.select("#my_dataviz")
+                    .append("div")
+                    .style("opacity", 0)
+                    .attr("class", "tooltip")
+                    .style("background-color", "white")
+                    .style("text-color", "black")
+                    .style("border", "solid")
+                    .style("border-width", "2px")
+                    .style("border-radius", "5px")
+                    .style("padding", "5px")
 
-                // Lines
-                svgT.selectAll("myline")
+                //3 functions for mouseover mousemove and mouseleave
+                const mouseover = function(event, d) {
+                    Tooltip
+                        .style("opacity", 10)
+                }
+                const mousemove = function(event, d) {
+                    Tooltip
+                        .html('<u>' + d.Planet + '</u>' + "<br>" + "Gravity: " +d.Gravity)
+                        .style("left", (event.x/2+20) + "px")
+                        .style("top", (event.y/2-30) + "px")
+                }
+                var mouseleave = function(event, d) {
+                    Tooltip
+                        .style("opacity", 1)
+                }
+
+                //Initialize the circle, make them located in the center
+                var node = svg.append("g")
+                    .selectAll("circle")
                     .data(data)
-                    .enter()
-                    .append("line")
-                    .attr("x1", function(d) { return x(d.value1); })
-                    .attr("x2", function(d) { return x(d.value2); })
-                    .attr("y1", function(d) { return y(d.group); })
-                    .attr("y2", function(d) { return y(d.group); })
-                    .attr("stroke", "grey")
-                    .attr("stroke-width", "1px")
+                    .join("circle")
+                    .attr("class", "node")
+                    .attr("r", d => size(d.Gravity)) //make size proportional based on gravity
+                    .attr("cx", width / 2)
+                    .attr("cy", height / 2)
+                    .attr("fill", function (d) {
+                        return theColors(d.Planet); //sdd colors
+                    })
+                    .style("fill-opacity", 0.8)
+                    .attr("stroke", "black")
+                    .style("stroke-width", 1)
+                    .on("mouseover", mouseover) //What to do when hovered
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave)
+                    .call(d3.drag() //call specific function when circle is dragged (not sure this works properly)
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
 
-                // Circles of variable 1
-                svgT.selectAll("mycircle")
-                    .data(data)
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function(d) { return x(d.value1); })
-                    .attr("cy", function(d) { return y(d.group); })
-                    .attr("r", "6")
-                    .style("fill", "black")
+                //Features of the forces applied to the nodes:
+                const simulation = d3.forceSimulation()
+                    .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+                    .force("charge", d3.forceManyBody().strength(.1)) // Nodes are attracted one each other of value is > 0
+                    .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (size(d.Gravity)+3) }).iterations(1)) // Force that avoids circle overlapping
 
-                // Circles of variable 2
-                svgT.selectAll("mycircle")
-                    .data(data)
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function(d) { return x(d.value2); })
-                    .attr("cy", function(d) { return y(d.group); })
-                    .attr("r", "6")
-                    .style("fill", "steelblue")
+                //Apply these forces to the nodes and update their positions.
+                //Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+                simulation
+                    .nodes(data)
+                    .on("tick", function(d){
+                        node
+                            .attr("cx", d => d.x)
+                            .attr("cy", d => d.y)
+                    });
+
+                //for the drag features
+                function dragstarted(event, d) {
+                    if (!event.active) simulation.alphaTarget(.03).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                function dragged(event, d) {
+                    d.fx = event.x;
+                    d.fy = event.y;
+                }
+                function dragended(event, d) {
+                    if (!event.active) simulation.alphaTarget(.03);
+                    d.fx = null;
+                    d.fy = null;
+                }
             })
+
         </script>
+
+        <!-- second chart -->
+        <div id="moons">
+            <!-- create svg -->
+            <svg width="1100" height="600" id="svg1"></svg>
+            <script>
+                //initialise the svg
+                var merMoons = d3.select("#svg1"),
+                    margin = 200,
+                    width = merMoons.attr("width") - margin,
+                    height = merMoons.attr("height") - margin;
+                //add the title
+                merMoons.append("text")
+                    .attr("transform", "translate(100, 0)")
+                    .attr("x", 85)
+                    .attr("y", 50)
+                    .attr("font-size", "24px")
+                    .text("Planets and the Number of Moons")
+                //set the scale for x and y axis
+                var xScale = d3.scaleBand().range([0, width]).padding(1);
+                var yScale = d3.scaleLinear().range([height, 0]);
+
+                var container_g = merMoons.append("g")
+                    .attr("transform",
+                        "translate(" + 100 + ", " + 100 + ")");
+                //load the data
+                d3.csv("moons.csv").then(data => {
+                    //set domain for x and y
+                    xScale.domain(data.map(function (d) {
+                        return d.Planets;
+                    }));
+                    yScale.domain([0, d3.max(data, function (d) {
+                        return +d.Moons;
+                    })]);
+
+                    //Draw bars!
+                    container_g.selectAll(".bar")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        //.attr("class", "bar")
+                        .attr("fill", function (d) {
+                            return theColors(d.Planets); //set colors
+                        })
+                        .attr("x", function (d) {
+                            return xScale(d.Planets);
+                        })
+                        .attr("y", function (d) {
+                            return yScale(+d.Moons);
+                        })
+                        .attr("width", 30)
+                        .attr("height", function (d) {
+                            return height - yScale(+d.Moons);
+                        })
+                        .append('title')
+                        .text(d => d.Planets + "'s " + "Number of Moons: " + d.Moons); //add "tooltips"
+
+                    // Display the X-axis
+                    container_g.append("g")
+                        .attr("transform", "translate(0, " + height + ")")
+                        .call(d3.axisBottom(xScale))
+                        .append("text")
+                        .attr("y", height - 365)
+                        .attr("x", width - 450)
+                        .attr("stroke", "black")
+                        .text("Planet")
+
+                    // Display the Y-axis
+                    container_g.append("g")
+                        .call(d3.axisLeft(yScale).tickFormat(function (d) {
+                            return d;
+                        }).ticks(7))
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", -30)
+                        .attr("x", -155)
+                        .attr("dy", "-1.1em")
+                        .attr("stroke", "black")
+                        .text("Number of Moons")
+                })
+            </script>
+        </div>
+
+        <div id="diameter">
+            <!-- create svg for number 3 chart -->
+            <svg width="600" height="600" id="svg2"></svg>
+            <script>
+                //set size of it
+                var merDiam = d3.select("#svg2"),
+                    margin = 200,
+                    widthM = merDiam.attr("width") - margin,
+                    heightM = merDiam.attr("height") - margin;
+                //add title
+                merDiam.append("text")
+                    .attr("transform", "translate(100, 0)")
+                    .attr("x", 85)
+                    .attr("y", 50)
+                    .attr("font-size", "24px")
+                    .text("Planets' Diameter")
+                //set the scale
+                var xScaleM = d3.scaleBand().range([0, widthM]).padding(1);
+                var yScaleM = d3.scaleLinear().range([heightM, 0]);
+
+                var container = merDiam.append("g")
+                    .attr("transform",
+                        "translate(" + 100 + ", " + 100 + ")");
+                //load the data (all data is on github not just through gists)
+                d3.csv("https://gist.githubusercontent.com/hollyjpotter/decab9995ab3c60a39264d1cc4c61cdf/raw/9e90f0180a2c6b9295cfa6883fbb80abe2572fc9/planetsDiameter.csv").then(dataM => {
+                    //set the domains for x and y
+                    xScaleM.domain(dataM.map(function (d) {
+                        return d.Planets;
+                    }));
+                    yScaleM.domain([0, d3.max(dataM, function (d) {
+                        return +d.Diameter;
+                    })]);
+
+                    //Draw circles!
+                    container.selectAll("dot")
+                        .data(dataM)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", function (d) {
+                            return xScaleM(d.Planets);
+                        })
+                        .attr("cy", function (d) {
+                            return yScaleM(+d.Diameter);
+                        })
+                        .attr("r", 10)
+                        .style("fill",  function (d) {
+                            return theColors(d.Planets); //add color
+                        })
+                        .attr("stroke", "black")
+                        .style("stroke-width", 1)
+                        .append('title')
+                        .text(d => d.Planets + "'s " + "Diameter: " + d.Diameter + "km"); //add "tooltips"
+
+                    // Display the X-axis
+                    container.append("g")
+                        .attr("transform", "translate(0, " + heightM + ")")
+                        .call(d3.axisBottom(xScaleM))
+                        .append("text")
+                        .attr("y", heightM - 365)
+                        .attr("x", widthM - 200)
+                        .attr("stroke", "black")
+                        .text("Planet")
+
+                    // Display the Y-axis
+                    container.append("g")
+                        .call(d3.axisLeft(yScaleM).tickFormat(function (d) {
+                            return d;
+                        }).ticks(10))
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", -40)
+                        .attr("x", -145)
+                        .attr("dy", "-1.1em")
+                        .attr("stroke", "black")
+                        .text("Diameter (km)")
+                })
+            </script>
+        </div>
+
+        <div id="temp">
+            <!-- create svg for number 4 chart -->
+            <svg width="1100" height="600" id="planetsTemp"></svg>
+            <script src="https://d3js.org/d3.v4.js"></script>
+            <script>
+                //set the dimensions and margins of the graph
+                var marginT = {top: 40, right: 30, bottom: 45, left: 50},
+                    widthT = 460 - marginT.left - marginT.right,
+                    heightT = 500 - marginT.top - marginT.bottom;
+
+                //append the svg object to the body of the page
+                var svgT = d3.select("#planetsTemp")
+                    .append("svg")
+                    .attr("width", widthT + marginT.left + marginT.right)
+                    .attr("height", heightT + marginT.top + marginT.bottom)
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + marginT.left + "," + marginT.top + ")");
+                //add title
+                svgT.append("text")
+                    .attr("transform", "translate(100, 0")
+                    .attr("x", 75)
+                    .attr("y", 10)
+                    .attr("font-size", "24px")
+                    .text("Planets' Temperatures")
+
+                //Parse the Data
+                d3.csv("https://gist.githubusercontent.com/hollyjpotter/a9659ae41a18a1530d5d5f113fe92cef/raw/c08e7a77cfe313564c4cb591cb008cd02d4ad270/planetTemps.csv", function(data) {
+
+                    //Add X axis
+                    var x = d3.scaleLinear()
+                        .domain([-450, 900])
+                        .range([ 0, widthT]);
+                    svgT.append("g")
+                        .attr("transform", "translate(0," + heightT + ")")
+                        .call(d3.axisBottom(x))
+
+                    //Y axis
+                    var y = d3.scaleBand()
+                        .range([ 0, heightT ])
+                        .domain(data.map(function(d) { return d.group; }))
+                        .padding(1);
+                    svgT.append("g")
+                        .call(d3.axisLeft(y))
+
+                    svgT.append("text")
+                        .attr("transform", "translate(100, 0)")
+                        .attr("x", 30)
+                        .attr("y", 455)
+                        .attr("font-size", "10px")
+                        .text("Temperature (in Degrees F)")
+
+                    //Lines
+                    svgT.selectAll("myline")
+                        .data(data)
+                        .enter()
+                        .append("line")
+                        .attr("x1", function(d) { return x(d.value1); })
+                        .attr("x2", function(d) { return x(d.value2); })
+                        .attr("y1", function(d) { return y(d.group); })
+                        .attr("y2", function(d) { return y(d.group); })
+                        .attr("stroke", "grey")
+                        .attr("stroke-width", "1px")
+
+                    //Circles of lowest temperature
+                    svgT.selectAll("mycircle")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", function(d) { return x(d.value1); })
+                        .attr("cy", function(d) { return y(d.group); })
+                        .attr("r", "6")
+                        .style("fill", "steelblue") //set color of low temp
+                        .append('title')
+                        .text(d => d.group + "'s " + "Lowest Temperature in degrees F: " + d.value1);
+
+                    //Circles of highest temperature
+                    svgT.selectAll("mycircle")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", function(d) { return x(d.value2); })
+                        .attr("cy", function(d) { return y(d.group); })
+                        .attr("r", "6")
+                        .style("fill", "#fa493c") //set color of high temp
+                        .append('title')
+                        .text(d => d.group + "'s " + "Highest Temperature in degrees F: " + d.value2);
+                })
+            </script>
+        </div>
     </div>
 </div>
 
