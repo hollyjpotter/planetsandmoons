@@ -718,7 +718,7 @@
                     .attr("transform",
                         "translate(" + 100 + ", " + 100 + ")");
                 //load the data
-                d3.csv("planetsMoons.csv").then(data => {
+                d3.csv("https://gist.githubusercontent.com/hollyjpotter/4c6f56135d559d12646a640ee89e794c/raw/1bfa58752378463d996fc719ea023e2875a0c9e8/planetsMoons.csv").then(data => {
                     //set domain for x and y
                     xScale.domain(data.map(function (d) {
                         return d.Planets;
